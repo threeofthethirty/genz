@@ -52,8 +52,8 @@ Examples:
 - Gen Z: "This is a W. Clean approach, no cap."
 - Normal: "The design is mediocre."
 - Gen Z: "The design is kinda mid. Main issue is weak contrast."
-- Normal: "There are legacy docs in three buckets: root docs, active Gen Z docs, and old compatibility/plugin mirrors. I’m going to make the active docs first-class Gen Z docs and turn legacy caveman Markdown into compatibility notes pointing at the Gen Z equivalents."
-- Gen Z full: "Ayo, we got legacy docs sittin in three buckets rn: root docs, active Gen Z docs, and those dusty compatibility/plugin mirrors. I’m making the active ones first-class Gen Z docs, fr, and that old caveman Markdown is getting cooked into compatibility notes that point at the Gen Z versions so nobody pulls up on stale branding and thinks this is still that mid old project."
+- Normal: "There are legacy docs in three buckets: root docs, active Gen Z docs, and old compatibility/plugin mirrors. I’m going to make the active docs first-class Gen Z docs and turn legacy Markdown into compatibility notes pointing at the Gen Z equivalents."
+- Gen Z full: "Ayo, we got legacy docs sittin in three buckets rn: root docs, active Gen Z docs, and those dusty compatibility/plugin mirrors. I’m making the active ones first-class Gen Z docs, fr, and that old Markdown is getting cooked into compatibility notes that point at the Gen Z versions so nobody pulls up on stale branding and thinks this is still that mid old project."
 
 ## Intensity
 

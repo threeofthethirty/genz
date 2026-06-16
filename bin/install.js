@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// caveman — unified cross-platform installer.
+// genz — unified cross-platform installer.
 //
 // One Node script replaces the old install.sh + install.ps1 + src/hooks/install.sh
 // + src/hooks/install.ps1 quartet. Single source of truth. Works on macOS, Linux,
@@ -8,7 +8,7 @@
 //
 // Distribution:
 //   Local clone: node bin/install.js [flags]
-//   curl|bash:   delegated from install.sh shim → npx -y github:JuliusBrussee/caveman -- [flags]
+//   curl|bash:   delegated from install.sh shim → npx -y github:BrightLiteMedia/genz -- [flags]
 //   Windows:     pwsh install.ps1 [flags] → same npx delegation
 //
 // Pure stdlib, zero npm runtime deps.
@@ -24,7 +24,6 @@ const crypto = require('crypto');
 
 const SETTINGS = require('./lib/settings');
 const OPENCLAW = require('./lib/openclaw');
-const { stripOpencodeAgentTools } = require('./lib/opencode-agent');
 
 const REPO = process.env.GENZ_REPO || 'BrightLiteMedia/genz';
 // Pin remote fetches to an immutable release tag, not the moving `main`
@@ -32,12 +31,12 @@ const REPO = process.env.GENZ_REPO || 'BrightLiteMedia/genz';
 // curl|bash / detached-script install downloads and executes. Bump this to
 // the new tag on every release (CI release step) AFTER regenerating
 // src/hooks/checksums.sha256 so the integrity manifest matches the ref.
-// Overridable via CAVEMAN_REF for testing against a branch.
+// Overridable via GENZ_REF for testing against a branch.
 const PINNED_REF = process.env.GENZ_REF || 'main';
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/${PINNED_REF}`;
 const HOOKS_REMOTE = `${RAW_BASE}/src/hooks`;
 const INIT_SCRIPT_URL = `${RAW_BASE}/src/tools/genz-init.js`;
-const MCP_SHRINK_PKG = 'caveman-shrink';
+const MCP_SHRINK_PKG = 'genz-shrink';
 // Hook files to copy. Statusline ships in both .sh (macOS/Linux) and .ps1
 // (Windows) flavors — copy both regardless of host OS so a roaming
 // $CLAUDE_CONFIG_DIR (e.g. dotfiles repo) keeps working across platforms.
@@ -47,6 +46,8 @@ const HOOK_FILES = [
   'genz-activate.js',
   'genz-mode-tracker.js',
   'genz-stats.js',
+  'genz-statusline.sh',
+  'genz-statusline.ps1',
 ];
 
 // ── Argv ───────────────────────────────────────────────────────────────────
@@ -62,7 +63,7 @@ function parseArgs(argv) {
     const a = argv[i];
     // --with-mcp-shrink=<upstream cmd>  (handled before the switch so the
     // GNU-style =value form is recognized). Bare --with-mcp-shrink falls
-    // through to the switch and is rejected — caveman-shrink is a proxy
+    // through to the switch and is rejected — genz-shrink is a proxy
     // and a stub registration just lands the user in a broken-MCP loop (#474).
     if (a.startsWith('--with-mcp-shrink=')) {
       const raw = a.slice('--with-mcp-shrink='.length);
@@ -92,7 +93,7 @@ function parseArgs(argv) {
           }
           opts.withMcpShrink = tokens;
         } else {
-          die('error: --with-mcp-shrink requires an upstream command — caveman-shrink\n' +
+          die('error: --with-mcp-shrink requires an upstream command — genz-shrink\n' +
               '  is a proxy and exits immediately without one. Pass the upstream:\n' +
               '  --with-mcp-shrink="npx @modelcontextprotocol/server-filesystem /path"');
         }
@@ -131,7 +132,7 @@ function parseArgs(argv) {
   //   • withHooks — left at 'auto' so installClaude() can skip standalone
   //     settings.json wiring when the plugin manifest already wires the hooks
   //     (duplicate registration fires both per event — issue #392).
-  //   • withMcpShrink — caveman-shrink is a proxy that needs an upstream
+  //   • withMcpShrink — genz-shrink is a proxy that needs an upstream
   //     command, so there's no sensible "everything on" default (issue #474).
   //     Opt in explicitly with --with-mcp-shrink="<upstream cmd>".
   if (opts.all) { opts.withInit = true; }
@@ -167,14 +168,14 @@ function checkWslWindowsNode() {
   // Windows-Node executing inside WSL has homedir like /mnt/c/Users/... which
   // breaks every config-dir resolution. Detect and abort with a clear hint.
   if (process.env.WSL_DISTRO_NAME) {
-    die('caveman: detected Windows Node.js running inside WSL.\n' +
+    die('genz: detected Windows Node.js running inside WSL.\n' +
         '         Install Linux-native Node inside your WSL distro and re-run there.\n' +
         '         (WSL_DISTRO_NAME=' + process.env.WSL_DISTRO_NAME + ')');
   }
   try {
     const v = fs.readFileSync('/proc/version', 'utf8').toLowerCase();
     if (v.includes('microsoft') || v.includes('wsl')) {
-      die('caveman: detected Windows Node.js running inside WSL (/proc/version).\n' +
+      die('genz: detected Windows Node.js running inside WSL (/proc/version).\n' +
           '         Install Linux-native Node inside your WSL distro and re-run there.');
     }
   } catch (_) { /* /proc/version absent on real Windows — fine */ }
@@ -182,7 +183,7 @@ function checkWslWindowsNode() {
 
 function checkNodeVersion() {
   const major = parseInt(process.versions.node.split('.')[0], 10);
-  if (major < 18) die(`caveman: Node ${process.versions.node} too old. Need Node ≥18. https://nodejs.org`);
+  if (major < 18) die(`genz: Node ${process.versions.node} too old. Need Node ≥18. https://nodejs.org`);
 }
 
 // ── Provider matrix ────────────────────────────────────────────────────────
@@ -451,7 +452,7 @@ async function installClaude(ctx) {
   // Self-heal: drop managed settings.json hook/statusLine entries whose target
   // script no longer exists (issue #471). Migrating an old manual install to
   // the plugin leaves settings.json pointing at removed ~/.claude/hooks/
-  // caveman-*.js scripts, so Claude Code crashes every SessionStart /
+  // genz-*.js scripts, so Claude Code crashes every SessionStart /
   // UserPromptSubmit with `loader:1478 — Cannot find module …`. Runs
   // unconditionally so it repairs an already-dirty config even when we then
   // skip standalone wiring because the plugin manifest handles hooks.
@@ -461,7 +462,7 @@ async function installClaude(ctx) {
     if (settings) {
       const pruned = SETTINGS.pruneOrphanedManagedHooks(settings, configDir);
       if (pruned > 0) {
-        note(`  removed ${pruned} orphaned caveman hook entr${pruned === 1 ? 'y' : 'ies'} from settings.json (target script missing)`);
+        note(`  removed ${pruned} orphaned genz hook entr${pruned === 1 ? 'y' : 'ies'} from settings.json (target script missing)`);
         if (!opts.dryRun) {
           SETTINGS.validateHookFields(settings);
           SETTINGS.writeSettings(settingsPath, settings);
@@ -476,7 +477,7 @@ async function installClaude(ctx) {
   //   default / --all  → wire only if the plugin install did NOT succeed.
   // The plugin manifest already wires SessionStart + UserPromptSubmit when the
   // plugin install succeeds; wiring them again in settings.json fires both per
-  // event (two CAVEMAN MODE blocks, two reinforcement lines).
+  // event (two GENZ MODE blocks, two reinforcement lines).
   let shouldWireHooks;
   if (opts.withHooks === false) {
     shouldWireHooks = false;
@@ -507,11 +508,11 @@ async function installClaude(ctx) {
   }
 
   if (opts.withMcpShrink) {
-    say('  → wiring caveman-shrink MCP proxy (--with-mcp-shrink)');
+    say('  → wiring genz-shrink MCP proxy (--with-mcp-shrink)');
     const r = installMcpShrink(ctx);
-    if (r.kind === 'ok')   results.installed.push('caveman-shrink');
-    if (r.kind === 'skip') results.skipped.push(['caveman-shrink', r.why]);
-    if (r.kind === 'fail') results.failed.push(['caveman-shrink', r.why]);
+    if (r.kind === 'ok')   results.installed.push('genz-shrink');
+    if (r.kind === 'skip') results.skipped.push(['genz-shrink', r.why]);
+    if (r.kind === 'fail') results.failed.push(['genz-shrink', r.why]);
   }
 
   process.stdout.write('\n');
@@ -559,15 +560,14 @@ function installViaSkills(ctx, prov) {
 }
 
 // ── opencode native install ───────────────────────────────────────────────
-// Drops the in-repo plugin (src/plugins/opencode/) plus skills, agents,
+// Drops the in-repo plugin (src/plugins/opencode/) plus skills,
 // commands, and an AGENTS.md ruleset into ~/.config/opencode/. Patches
 // opencode.json with a "plugin" array entry. Mirrors the Claude Code hook
 // architecture as closely as opencode allows — only the statusline is missing
 // (opencode's TUI exposes no plugin-writable badge).
-const OPENCODE_SKILL_DIRS  = ['genz'];
-const OPENCODE_AGENT_FILES = ['cavecrew-investigator.md', 'cavecrew-builder.md', 'cavecrew-reviewer.md'];
-const OPENCODE_COMMAND_FILES = ['genz.md'];
-const OPENCODE_PLUGIN_REL = './plugins/caveman/plugin.js';
+const OPENCODE_SKILL_DIRS  = ['genz', 'genz-commit', 'genz-review', 'genz-help', 'genz-stats', 'genz-compress'];
+const OPENCODE_COMMAND_FILES = ['genz.md', 'genz-commit.md', 'genz-review.md', 'genz-compress.md', 'genz-stats.md', 'genz-help.md'];
+const OPENCODE_PLUGIN_REL = './plugins/genz/plugin.js';
 const OPENCODE_AGENTS_MD_SENTINEL = 'Speak like a Gen Z person without losing accuracy';
 // Marker fence for the opencode AGENTS.md ruleset block. Same convention as
 // bin/lib/openclaw.js for SOUL.md — lets us strip our block cleanly even when
@@ -606,20 +606,18 @@ function installOpencode(ctx) {
   }
 
   const dir = opencodeConfigDir();
-  const pluginDir   = path.join(dir, 'plugins', 'caveman');
+  const pluginDir   = path.join(dir, 'plugins', 'genz');
   const commandsDir = path.join(dir, 'commands');
-  const agentsDir   = path.join(dir, 'agents');
   const skillsDir   = path.join(dir, 'skills');
   const opencodeJson = path.join(dir, 'opencode.json');
   const agentsMd     = path.join(dir, 'AGENTS.md');
 
   if (opts.dryRun) {
-    note(`  would mkdir ${pluginDir}/, ${commandsDir}/, ${agentsDir}/, ${skillsDir}/`);
-    note(`  would copy plugin.js + package.json + caveman-config.cjs into ${pluginDir}/`);
+    note(`  would mkdir ${pluginDir}/, ${commandsDir}/, ${skillsDir}/`);
+    note(`  would copy plugin.js + package.json + genz-config.cjs into ${pluginDir}/`);
     note(`  would copy ${OPENCODE_COMMAND_FILES.length} command files into ${commandsDir}/`);
-    note(`  would copy ${OPENCODE_AGENT_FILES.length} cavecrew agents into ${agentsDir}/`);
     note(`  would copy ${OPENCODE_SKILL_DIRS.length} skill dirs into ${skillsDir}/`);
-    note(`  would patch ${opencodeJson} with "plugin" entry${opts.withMcpShrink ? ' + caveman-shrink MCP' : ''}`);
+    note(`  would patch ${opencodeJson} with "plugin" entry${opts.withMcpShrink ? ' + genz-shrink MCP' : ''}`);
     note(`  would write Tier-3 ruleset to ${agentsMd}`);
     results.installed.push('opencode');
     process.stdout.write('\n');
@@ -627,7 +625,7 @@ function installOpencode(ctx) {
   }
 
   try {
-    // 1. Plugin dir — copy plugin.js, package.json, caveman-config.js (sibling).
+    // 1. Plugin dir — copy plugin.js, package.json, genz-config.js (sibling).
     //    Same `--force` semantic as commands/agents/skills below: re-runs leave
     //    user edits to plugin.js alone unless --force is passed.
     fs.mkdirSync(pluginDir, { recursive: true });
@@ -637,8 +635,8 @@ function installOpencode(ctx) {
       [path.join(pluginSrc, 'package.json'), path.join(pluginDir, 'package.json')],
       // Renamed to .cjs because the plugin dir is "type": "module" — a bare .js
       // sibling would be loaded as ESM and break the plugin's require() bridge.
-      [path.join(repoRoot, 'src', 'hooks', 'caveman-config.js'),
-       path.join(pluginDir, 'caveman-config.cjs')],
+      [path.join(repoRoot, 'src', 'hooks', 'genz-config.js'),
+       path.join(pluginDir, 'genz-config.cjs')],
     ];
     for (const [src, dest] of pluginPayload) {
       if (fs.existsSync(dest) && !opts.force) {
@@ -661,23 +659,7 @@ function installOpencode(ctx) {
       process.stdout.write(`  installed: ${dest}\n`);
     }
 
-    // 3. Subagents. Source files target Claude Code's schema (`tools: [...]`
-    //    YAML array); opencode rejects that form and refuses to boot until the
-    //    file is removed. Strip the `tools:` line on copy — opencode falls back
-    //    to its default tool set, and subagent prompts already self-restrict in
-    //    the body. Issue #386.
-    fs.mkdirSync(agentsDir, { recursive: true });
-    const agentSrcDir = path.join(repoRoot, 'agents');
-    for (const f of OPENCODE_AGENT_FILES) {
-      const src = path.join(agentSrcDir, f);
-      const dest = path.join(agentsDir, f);
-      if (!fs.existsSync(src)) continue;
-      if (fs.existsSync(dest) && !opts.force) { note(`  skipped ${dest} (exists; --force to overwrite)`); continue; }
-      fs.writeFileSync(dest, stripOpencodeAgentTools(fs.readFileSync(src, 'utf8')));
-      process.stdout.write(`  installed: ${dest}\n`);
-    }
-
-    // 4. Skills — opencode auto-discovers SKILL.md from ~/.config/opencode/skills/.
+    // 3. Skills — opencode auto-discovers SKILL.md from ~/.config/opencode/skills/.
     fs.mkdirSync(skillsDir, { recursive: true });
     const skillSrcDir = path.join(repoRoot, 'skills');
     for (const name of OPENCODE_SKILL_DIRS) {
@@ -724,7 +706,7 @@ function installOpencode(ctx) {
       process.stdout.write(`  installed: ${agentsMd}\n`);
     }
 
-    // 6. opencode.json — add plugin entry; optional caveman-shrink MCP.
+    // 6. opencode.json — add plugin entry; optional genz-shrink MCP.
     let cfg = SETTINGS.readSettings(opencodeJson);
     if (cfg === null) {
       warn(`  ${opencodeJson} unparseable; will not touch it. Edit manually then re-run.`);
@@ -744,16 +726,16 @@ function installOpencode(ctx) {
     }
     if (opts.withMcpShrink) {
       // opts.withMcpShrink is the array of upstream-cmd tokens parseArgs
-      // produced. caveman-shrink is a proxy — it crashes without an upstream,
+      // produced. genz-shrink is a proxy — it crashes without an upstream,
       // so we always wire one through.
       if (!cfg.mcp || typeof cfg.mcp !== 'object') cfg.mcp = {};
-      if (!cfg.mcp['caveman-shrink']) {
-        cfg.mcp['caveman-shrink'] = {
+      if (!cfg.mcp['genz-shrink']) {
+        cfg.mcp['genz-shrink'] = {
           type: 'local',
           command: ['npx', '-y', MCP_SHRINK_PKG, ...opts.withMcpShrink],
           enabled: true,
         };
-        process.stdout.write(`  registered caveman-shrink MCP server (wraps: ${opts.withMcpShrink.join(' ')})\n`);
+        process.stdout.write(`  registered genz-shrink MCP server (wraps: ${opts.withMcpShrink.join(' ')})\n`);
       }
     }
     SETTINGS.writeSettings(opencodeJson, cfg);
@@ -768,10 +750,10 @@ function installOpencode(ctx) {
 }
 
 // ── OpenClaw native install ───────────────────────────────────────────────
-// Drops skills/caveman/ into the OpenClaw workspace and appends a small
+// Drops skills/genz/ into the OpenClaw workspace and appends a small
 // auto-injected bootstrap block to the workspace SOUL.md. Always-on behavior
 // comes from SOUL.md (auto-injected each turn); the skill folder makes
-// caveman discoverable via `openclaw skills list`. See bin/lib/openclaw.js
+// genz discoverable via `openclaw skills list`. See bin/lib/openclaw.js
 // for the actual file writes.
 function installOpenclaw(ctx) {
   const { say, note, warn, opts, repoRoot, results } = ctx;
@@ -809,7 +791,7 @@ async function installHooks(ctx) {
   if (opts.dryRun) {
     note(`  would mkdir -p ${hooksDir}`);
     for (const f of HOOK_FILES) note(`  would install ${path.join(hooksDir, f)}`);
-    note(`  would merge SessionStart + UserPromptSubmit into ${settingsPath}`);
+    note(`  would merge SessionStart + UserPromptSubmit + statusline into ${settingsPath}`);
     return 'ok';
   }
 
@@ -863,6 +845,10 @@ async function installHooks(ctx) {
   const node = absoluteNodePath();
   const activate = path.join(hooksDir, 'genz-activate.js');
   const tracker  = path.join(hooksDir, 'genz-mode-tracker.js');
+  const statusline = path.join(
+    hooksDir,
+    process.platform === 'win32' ? 'genz-statusline.ps1' : 'genz-statusline.sh'
+  );
   // Migrate any legacy bare-`node` invocations of our managed scripts.
   SETTINGS.rewriteLegacyManagedHookCommands(settings, node);
 
@@ -879,6 +865,15 @@ async function installHooks(ctx) {
     timeout: 5,
     statusMessage: 'Tracking Gen Z mode...',
   });
+
+  if (!settings.statusLine) {
+    settings.statusLine = {
+      type: 'command',
+      command: process.platform === 'win32'
+        ? `powershell -NoProfile -ExecutionPolicy Bypass -File "${statusline}"`
+        : `bash "${statusline}"`,
+    };
+  }
 
   // Defensive validation before write — Claude Code Zod will discard the
   // entire settings.json if any single hook is malformed (#249-class footgun).
@@ -907,19 +902,19 @@ function installMcpShrink(ctx) {
   }
   // opts.withMcpShrink is always an array of upstream-cmd tokens by the
   // time we get here; parseArgs rejects bare --with-mcp-shrink. The proxy
-  // gets `npx -y caveman-shrink <upstream tokens...>` so it has something
+  // gets `npx -y genz-shrink <upstream tokens...>` so it has something
   // to wrap.
   const upstream = opts.withMcpShrink;
   const r = runSpawn(
     'claude',
-    ['mcp', 'add', 'caveman-shrink', '--', 'npx', '-y', MCP_SHRINK_PKG, ...upstream],
+    ['mcp', 'add', 'genz-shrink', '--', 'npx', '-y', MCP_SHRINK_PKG, ...upstream],
     null, opts.dryRun
   );
   if ((r.status || 0) === 0) {
     note(`    registered, wrapping: ${upstream.join(' ')}`);
-    note(`    Edit ~/.claude.json mcpServers["caveman-shrink"] to change the upstream,`);
-    note('    or `claude mcp remove caveman-shrink` to drop it.');
-    note(`    Docs: https://github.com/${REPO}/tree/main/src/mcp-servers/caveman-shrink`);
+    note(`    Edit ~/.claude.json mcpServers["genz-shrink"] to change the upstream,`);
+    note('    or `claude mcp remove genz-shrink` to drop it.');
+    note(`    Docs: https://github.com/${REPO}/tree/main/src/mcp-servers/genz-shrink`);
     return { kind: 'ok' };
   }
   return { kind: 'fail', why: 'claude mcp add failed' };
@@ -991,7 +986,7 @@ function sha256File(p) {
 // the standard `sha256sum` text format: "<64-hex>  <path>" (two spaces, or
 // " *<path>" binary marker).
 async function loadRemoteHookChecksums() {
-  const tmp = path.join(os.tmpdir(), `caveman-checksums-${process.pid}-${Date.now()}.sha256`);
+  const tmp = path.join(os.tmpdir(), `genz-checksums-${process.pid}-${Date.now()}.sha256`);
   try {
     await downloadTo(`${HOOKS_REMOTE}/checksums.sha256`, tmp);
     const txt = fs.readFileSync(tmp, 'utf8');
@@ -1011,7 +1006,7 @@ async function loadRemoteHookChecksums() {
 // ── Uninstall ─────────────────────────────────────────────────────────────
 function uninstall(ctx) {
   const { say, note, warn, ok, opts, configDir } = ctx;
-  say('🪨 caveman uninstall');
+  say('🪨 genz uninstall');
 
   if (opts.dryRun) note('  (dry run — nothing will be removed)');
 
@@ -1021,15 +1016,15 @@ function uninstall(ctx) {
   if (fs.existsSync(settingsPath)) {
     const settings = SETTINGS.readSettings(settingsPath);
     if (settings) {
-      const removed = SETTINGS.removeCavemanHooks(settings, 'caveman');
+      const removed = SETTINGS.removeGenzHooks(settings, 'genz');
       // Drop our statusline if it points at our script
       if (settings.statusLine) {
         const cmd = typeof settings.statusLine === 'string' ? settings.statusLine : (settings.statusLine.command || '');
-        if (cmd.includes('caveman-statusline')) delete settings.statusLine;
+        if (cmd.includes('genz-statusline')) delete settings.statusLine;
       }
       SETTINGS.validateHookFields(settings);
       if (!opts.dryRun) SETTINGS.writeSettings(settingsPath, settings);
-      ok(`  removed ${removed} caveman hook entr${removed === 1 ? 'y' : 'ies'} from settings.json`);
+      ok(`  removed ${removed} genz hook entr${removed === 1 ? 'y' : 'ies'} from settings.json`);
     }
   }
 
@@ -1044,30 +1039,30 @@ function uninstall(ctx) {
   }
 
   // Plugin uninstall on Claude. Probe `plugin list` first so a re-run on a
-  // machine where caveman was never installed (or was already removed) doesn't
+  // machine where genz was never installed (or was already removed) doesn't
   // print "Plugin not installed" stderr noise.
   if (hasCmd('claude')) {
     const probe = captureSpawn('claude', ['plugin', 'list']);
-    if (probe.status === 0 && /caveman/i.test(probe.stdout || '')) {
-      const r = runSpawn('claude', ['plugin', 'uninstall', 'caveman@caveman'], null, opts.dryRun);
+    if (probe.status === 0 && /genz/i.test(probe.stdout || '')) {
+      const r = runSpawn('claude', ['plugin', 'uninstall', 'genz@genz'], null, opts.dryRun);
       if ((r.status || 0) === 0) ok('  removed claude plugin');
     } else {
       note('  claude plugin not installed — skipping');
     }
 
-    // caveman-shrink MCP — only run if `claude mcp` subcommand exists. Tolerate
+    // genz-shrink MCP — only run if `claude mcp` subcommand exists. Tolerate
     // non-zero exit (server may have never been registered).
     const mcpHelp = captureSpawn('claude', ['mcp', '--help']);
     if (mcpHelp.status === 0) {
-      runSpawn('claude', ['mcp', 'remove', 'caveman-shrink'], null, opts.dryRun);
+      runSpawn('claude', ['mcp', 'remove', 'genz-shrink'], null, opts.dryRun);
     }
   }
 
   // Gemini extension. Same idempotency probe as claude.
   if (hasCmd('gemini')) {
     const probe = captureSpawn('gemini', ['extensions', 'list']);
-    if (probe.status === 0 && /caveman/i.test(probe.stdout || '')) {
-      runSpawn('gemini', ['extensions', 'uninstall', 'caveman'], null, opts.dryRun);
+    if (probe.status === 0 && /genz/i.test(probe.stdout || '')) {
+      runSpawn('gemini', ['extensions', 'uninstall', 'genz'], null, opts.dryRun);
     } else {
       note('  gemini extension not installed — skipping');
     }
@@ -1076,7 +1071,7 @@ function uninstall(ctx) {
   // opencode native install — strip plugin entry, MCP entry, and our files.
   // Probed by the existence of the plugin dir we own; if absent, skip silently.
   const ocDir = opencodeConfigDir();
-  const ocPluginDir = path.join(ocDir, 'plugins', 'caveman');
+  const ocPluginDir = path.join(ocDir, 'plugins', 'genz');
   if (fs.existsSync(ocPluginDir)) {
     const ocJson = path.join(ocDir, 'opencode.json');
     if (fs.existsSync(ocJson)) {
@@ -1086,31 +1081,27 @@ function uninstall(ctx) {
           cfg.plugin = cfg.plugin.filter(p => p !== OPENCODE_PLUGIN_REL);
           if (cfg.plugin.length === 0) delete cfg.plugin;
         }
-        if (cfg.mcp && typeof cfg.mcp === 'object' && cfg.mcp['caveman-shrink']) {
-          delete cfg.mcp['caveman-shrink'];
+        if (cfg.mcp && typeof cfg.mcp === 'object' && cfg.mcp['genz-shrink']) {
+          delete cfg.mcp['genz-shrink'];
           if (Object.keys(cfg.mcp).length === 0) delete cfg.mcp;
         }
         if (!opts.dryRun) SETTINGS.writeSettings(ocJson, cfg);
-        ok(`  pruned caveman entries from ${ocJson}`);
+        ok(`  pruned genz entries from ${ocJson}`);
       }
     }
     if (!opts.dryRun) { try { fs.rmSync(ocPluginDir, { recursive: true, force: true }); } catch (_) {} }
     note(`  removed ${ocPluginDir}`);
-    // Commands, agents, skills — only files matching our manifest (don't
+    // Commands and skills — only files matching our manifest (don't
     // sweep the parent dirs; user may have other entries there).
     for (const f of OPENCODE_COMMAND_FILES) {
       const p = path.join(ocDir, 'commands', f);
-      if (fs.existsSync(p) && !opts.dryRun) { try { fs.unlinkSync(p); } catch (_) {} }
-    }
-    for (const f of OPENCODE_AGENT_FILES) {
-      const p = path.join(ocDir, 'agents', f);
       if (fs.existsSync(p) && !opts.dryRun) { try { fs.unlinkSync(p); } catch (_) {} }
     }
     for (const name of OPENCODE_SKILL_DIRS) {
       const p = path.join(ocDir, 'skills', name);
       if (fs.existsSync(p) && !opts.dryRun) { try { fs.rmSync(p, { recursive: true, force: true }); } catch (_) {} }
     }
-    // AGENTS.md — strip the fenced caveman block (preserves user content
+    // AGENTS.md — strip the fenced genz block (preserves user content
     // above and below). If the file is empty after the strip, remove it.
     // Falls back to legacy unfenced-sentinel handling for installs that
     // pre-date the marker fence.
@@ -1131,37 +1122,37 @@ function uninstall(ctx) {
             fs.writeFileSync(ocAgentsMd, next, { mode: 0o644 });
           }
         }
-        note(next === '' ? `  removed ${ocAgentsMd}` : `  stripped caveman block from ${ocAgentsMd}`);
+        note(next === '' ? `  removed ${ocAgentsMd}` : `  stripped genz block from ${ocAgentsMd}`);
       } else if (body.includes(OPENCODE_AGENTS_MD_SENTINEL)) {
         // Legacy install (no marker fence). Remove only if the file is ours.
         if (body.trim() === '' || body.trim().startsWith(OPENCODE_AGENTS_MD_SENTINEL)) {
           if (!opts.dryRun) { try { fs.unlinkSync(ocAgentsMd); } catch (_) {} }
           note(`  removed ${ocAgentsMd}`);
         } else {
-          note(`  left ${ocAgentsMd} in place (legacy mixed content — strip caveman block manually)`);
+          note(`  left ${ocAgentsMd} in place (legacy mixed content — strip genz block manually)`);
         }
       }
     }
     // opencode flag file
-    const ocFlag = path.join(ocDir, '.caveman-active');
+    const ocFlag = path.join(ocDir, '.genz-active');
     if (fs.existsSync(ocFlag) && !opts.dryRun) { try { fs.unlinkSync(ocFlag); } catch (_) {} }
   }
 
   // OpenClaw native install — strip skill folder + SOUL.md marker block.
   // Probed by the skill folder we own; if absent, skip silently.
   const ocwWs = process.env.OPENCLAW_WORKSPACE || path.join(os.homedir(), '.openclaw', 'workspace');
-  if (fs.existsSync(path.join(ocwWs, 'skills', 'caveman')) || fs.existsSync(path.join(ocwWs, 'SOUL.md'))) {
+  if (fs.existsSync(path.join(ocwWs, 'skills', 'genz')) || fs.existsSync(path.join(ocwWs, 'SOUL.md'))) {
     const log = {
       write: (s) => process.stdout.write(s),
       note: (s) => note(s),
       warn: (s) => warn(s),
     };
     const r = OPENCLAW.uninstallOpenclaw({ workspace: ocwWs, dryRun: opts.dryRun, log });
-    if (r.touched) ok('  pruned caveman entries from OpenClaw workspace');
+    if (r.touched) ok('  pruned genz entries from OpenClaw workspace');
   }
 
   // Flag file
-  const flag = path.join(configDir, '.caveman-active');
+  const flag = path.join(configDir, '.genz-active');
   if (fs.existsSync(flag) && !opts.dryRun) { try { fs.unlinkSync(flag); } catch (_) {} }
 
   process.stdout.write('\n');
@@ -1230,9 +1221,9 @@ FLAGS
   --no-hooks            Skip the hooks installer.
   --with-init           Write per-repo IDE rule files into \$PWD.
   --with-mcp-shrink="<upstream cmd>"
-                        Claude Code (and opencode): register caveman-shrink MCP
+                        Claude Code (and opencode): register genz-shrink MCP
                         proxy wrapping the given upstream. Default OFF.
-                        caveman-shrink crashes without an upstream, so a value
+                        genz-shrink crashes without an upstream, so a value
                         is required. The value is whitespace-tokenized.
                         Example: --with-mcp-shrink="npx @modelcontextprotocol/server-filesystem /tmp"
   --no-mcp-shrink       Skip MCP shrink. (Default.)

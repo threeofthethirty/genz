@@ -1,6 +1,6 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ClaudeDir = if ($env:CLAUDE_CONFIG_DIR) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $HOME ".claude" }
-$Flag = Join-Path $ClaudeDir ".caveman-active"
+$Flag = Join-Path $ClaudeDir ".genz-active"
 if (-not (Test-Path $Flag)) { exit 0 }
 
 # Refuse reparse points (symlinks / junctions) and oversized files. Without
@@ -28,24 +28,24 @@ try {
 $Mode = $Mode.ToLowerInvariant()
 $Mode = ($Mode -replace '[^a-z0-9-]', '')
 
-$Valid = @('off','lite','full','ultra','wenyan-lite','wenyan','wenyan-full','wenyan-ultra','commit','review','compress')
+$Valid = @('off','lite','full','max','commit','review','compress')
 if (-not ($Valid -contains $Mode)) { exit 0 }
 
 $Esc = [char]27
 if ([string]::IsNullOrEmpty($Mode) -or $Mode -eq "full") {
-    [Console]::Write("${Esc}[38;5;172m[CAVEMAN]${Esc}[0m")
+    [Console]::Write("${Esc}[38;5;172m[GENZ]${Esc}[0m")
 } else {
     $Suffix = $Mode.ToUpperInvariant()
-    [Console]::Write("${Esc}[38;5;172m[CAVEMAN:$Suffix]${Esc}[0m")
+    [Console]::Write("${Esc}[38;5;172m[GENZ:$Suffix]${Esc}[0m")
 }
 
-# Savings suffix: on by default. Opt out via CAVEMAN_STATUSLINE_SAVINGS=0.
-# Reads a pre-rendered string written by caveman-stats.js. Refuses reparse
+# Savings suffix: on by default. Opt out via GENZ_STATUSLINE_SAVINGS=0.
+# Reads a pre-rendered string written by genz-stats.js. Refuses reparse
 # points and strips control bytes (matches statusline.sh hardening). Until
-# /caveman-stats has run at least once, the suffix file is absent and nothing
+# /genz-stats has run at least once, the suffix file is absent and nothing
 # is rendered — safe default for fresh installs.
-if ($env:CAVEMAN_STATUSLINE_SAVINGS -ne "0") {
-    $SavingsFile = Join-Path $ClaudeDir ".caveman-statusline-suffix"
+if ($env:GENZ_STATUSLINE_SAVINGS -ne "0") {
+    $SavingsFile = Join-Path $ClaudeDir ".genz-statusline-suffix"
     if (Test-Path $SavingsFile) {
         try {
             $SavingsItem = Get-Item -LiteralPath $SavingsFile -Force -ErrorAction Stop

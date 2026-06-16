@@ -40,7 +40,7 @@ const requireCjs = createRequire(import.meta.url);
 const SETTINGS = requireCjs(path.join(REPO_ROOT, 'bin', 'lib', 'settings.js'));
 
 function freshTmpDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'caveman-freshinstall-'));
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'genz-freshinstall-'));
 }
 
 function pathWithout(binNames) {
@@ -64,7 +64,7 @@ function pathWithout(binNames) {
 }
 
 function runInstaller(args, configDir, extraEnv = {}) {
-  return spawnSync('node', [INSTALLER, ...args, '--config-dir', configDir, '--non-interactive', '--no-mcp-shrink'], {
+  return spawnSync(process.execPath, [INSTALLER, ...args, '--config-dir', configDir, '--non-interactive', '--no-mcp-shrink'], {
     env: { ...process.env, CLAUDE_CONFIG_DIR: configDir, NO_COLOR: '1', ...extraEnv },
     encoding: 'utf8',
   });
@@ -80,8 +80,8 @@ function hasClaudeCli() {
 }
 
 const STATUSLINE_FILE = process.platform === 'win32'
-  ? 'caveman-statusline.ps1'
-  : 'caveman-statusline.sh';
+  ? 'genz-statusline.ps1'
+  : 'genz-statusline.sh';
 
 function getStatuslineCommand(settings) {
   if (!settings.statusLine) return '';
@@ -90,7 +90,7 @@ function getStatuslineCommand(settings) {
     : (settings.statusLine.command || '');
 }
 
-function cavemanHookCommands(settings, event, marker) {
+function genzHookCommands(settings, event, marker) {
   return (settings.hooks?.[event] || [])
     .flatMap(e => (Array.isArray(e?.hooks) ? e.hooks : []))
     .filter(h => h && typeof h.command === 'string' && h.command.includes(marker));
@@ -106,9 +106,9 @@ test('fresh install populates hooks dir and settings.json (skipped without `clau
     assert.notEqual(r.status, 2, `installer aborted on argv parse: ${r.stderr}`);
 
     const hooks = path.join(dir, 'hooks');
-    assert.ok(fs.existsSync(path.join(hooks, 'caveman-activate.js')),     'caveman-activate.js missing');
-    assert.ok(fs.existsSync(path.join(hooks, 'caveman-mode-tracker.js')), 'caveman-mode-tracker.js missing');
-    assert.ok(fs.existsSync(path.join(hooks, 'caveman-config.js')),       'caveman-config.js missing');
+    assert.ok(fs.existsSync(path.join(hooks, 'genz-activate.js')),     'genz-activate.js missing');
+    assert.ok(fs.existsSync(path.join(hooks, 'genz-mode-tracker.js')), 'genz-mode-tracker.js missing');
+    assert.ok(fs.existsSync(path.join(hooks, 'genz-config.js')),       'genz-config.js missing');
     assert.ok(fs.existsSync(path.join(hooks, 'package.json')),            'hooks/package.json (CJS marker) missing');
     assert.ok(fs.existsSync(path.join(hooks, STATUSLINE_FILE)),           `${STATUSLINE_FILE} missing`);
 
@@ -117,13 +117,13 @@ test('fresh install populates hooks dir and settings.json (skipped without `clau
     assert.ok(fs.existsSync(settingsPath), 'settings.json missing');
     const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
 
-    assert.ok(SETTINGS.hasCavemanHook(settings, 'SessionStart', 'caveman-activate'),
+    assert.ok(SETTINGS.hasGenzHook(settings, 'SessionStart', 'genz-activate'),
       'SessionStart hook missing or wrong marker');
-    assert.ok(SETTINGS.hasCavemanHook(settings, 'UserPromptSubmit', 'caveman-mode-tracker'),
+    assert.ok(SETTINGS.hasGenzHook(settings, 'UserPromptSubmit', 'genz-mode-tracker'),
       'UserPromptSubmit hook missing or wrong marker');
     assert.ok(settings.statusLine, 'statusLine not set');
-    assert.match(getStatuslineCommand(settings), /caveman-statusline/,
-      'statusLine command does not reference caveman');
+    assert.match(getStatuslineCommand(settings), /genz-statusline/,
+      'statusLine command does not reference genz');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -140,18 +140,18 @@ test('idempotent install does not duplicate hook entries (skipped without `claud
 
     const settings = JSON.parse(fs.readFileSync(path.join(dir, 'settings.json'), 'utf8'));
 
-    const sessStart = cavemanHookCommands(settings, 'SessionStart', 'caveman-activate');
-    assert.equal(sessStart.length, 1, `expected 1 SessionStart caveman hook, got ${sessStart.length}`);
+    const sessStart = genzHookCommands(settings, 'SessionStart', 'genz-activate');
+    assert.equal(sessStart.length, 1, `expected 1 SessionStart genz hook, got ${sessStart.length}`);
 
-    const ups = cavemanHookCommands(settings, 'UserPromptSubmit', 'caveman-mode-tracker');
-    assert.equal(ups.length, 1, `expected 1 UserPromptSubmit caveman hook, got ${ups.length}`);
+    const ups = genzHookCommands(settings, 'UserPromptSubmit', 'genz-mode-tracker');
+    assert.equal(ups.length, 1, `expected 1 UserPromptSubmit genz hook, got ${ups.length}`);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
 // ── Test: uninstall removes hooks, preserves unrelated entries ─────────────
-test('uninstall strips caveman hooks but preserves user-authored ones (skipped without `claude` CLI)', { skip: !hasClaudeCli() && 'claude CLI not on PATH; uninstall test depends on a prior real install' }, () => {
+test('uninstall strips genz hooks but preserves user-authored ones (skipped without `claude` CLI)', { skip: !hasClaudeCli() && 'claude CLI not on PATH; uninstall test depends on a prior real install' }, () => {
   const dir = freshTmpDir();
   try {
     // Seed user's existing settings so we can verify they survive.
@@ -174,29 +174,29 @@ test('uninstall strips caveman hooks but preserves user-authored ones (skipped w
     // Hook scripts deleted.
     const hooks = path.join(dir, 'hooks');
     if (fs.existsSync(hooks)) {
-      for (const f of ['caveman-activate.js', 'caveman-mode-tracker.js', 'caveman-config.js', STATUSLINE_FILE]) {
+      for (const f of ['genz-activate.js', 'genz-mode-tracker.js', 'genz-config.js', STATUSLINE_FILE]) {
         assert.equal(fs.existsSync(path.join(hooks, f)), false, `${f} should be removed`);
       }
     }
 
     // Settings cleaned up.
     const settings = JSON.parse(fs.readFileSync(path.join(dir, 'settings.json'), 'utf8'));
-    // No remaining caveman-marked hooks anywhere.
+    // No remaining genz-marked hooks anywhere.
     for (const ev of Object.keys(settings.hooks || {})) {
       const arr = settings.hooks[ev] || [];
       for (const e of arr) {
         for (const h of (e.hooks || [])) {
-          assert.doesNotMatch(h.command || '', /caveman/, `${ev} still has caveman hook: ${h.command}`);
+          assert.doesNotMatch(h.command || '', /genz/, `${ev} still has genz hook: ${h.command}`);
         }
       }
     }
     // User's pre-existing hook preserved.
-    const preservedUser = cavemanHookCommands(settings, 'SessionStart', 'user-owned-hook').length > 0;
+    const preservedUser = genzHookCommands(settings, 'SessionStart', 'user-owned-hook').length > 0;
     assert.ok(preservedUser, 'user-authored SessionStart hook was wiped during uninstall');
 
-    // Statusline pointing at caveman should be removed.
-    assert.doesNotMatch(getStatuslineCommand(settings), /caveman-statusline/,
-      'caveman statusline survived uninstall');
+    // Statusline pointing at genz should be removed.
+    assert.doesNotMatch(getStatuslineCommand(settings), /genz-statusline/,
+      'genz statusline survived uninstall');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -228,9 +228,9 @@ test('install tolerates JSONC settings.json (comments + trailing commas)', { ski
     // User's `model` key must survive the merge.
     assert.equal(parsed.model, 'opus', 'user-authored model setting was dropped');
 
-    // Caveman hooks must be wired.
-    assert.ok(SETTINGS.hasCavemanHook(parsed, 'SessionStart', 'caveman-activate'));
-    assert.ok(SETTINGS.hasCavemanHook(parsed, 'UserPromptSubmit', 'caveman-mode-tracker'));
+    // Genz hooks must be wired.
+    assert.ok(SETTINGS.hasGenzHook(parsed, 'SessionStart', 'genz-activate'));
+    assert.ok(SETTINGS.hasGenzHook(parsed, 'UserPromptSubmit', 'genz-mode-tracker'));
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -241,21 +241,21 @@ test('install tolerates JSONC settings.json (comments + trailing commas)', { ski
 // OPENCLAW_WORKSPACE — no network, no external CLI, no plugin install. Safe
 // to run on every CI box.
 
-const SKILL_BODY_SRC = path.join(REPO_ROOT, 'skills', 'caveman', 'SKILL.md');
+const SKILL_BODY_SRC = path.join(REPO_ROOT, 'skills', 'genz', 'SKILL.md');
 
 test('openclaw install writes skill folder + SOUL.md bootstrap', () => {
   const dir = freshTmpDir();
   const ws = path.join(dir, 'ws');
   fs.mkdirSync(ws);
   try {
-    const r = spawnSync('node', [INSTALLER, '--only', 'openclaw', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir], {
+    const r = spawnSync(process.execPath, [INSTALLER, '--only', 'openclaw', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir], {
       env: { ...process.env, OPENCLAW_WORKSPACE: ws, NO_COLOR: '1' },
       encoding: 'utf8',
     });
     assert.notEqual(r.status, 2, `installer aborted on argv parse: ${r.stderr}`);
 
     // 1. Skill body written with merged frontmatter.
-    const skillFile = path.join(ws, 'skills', 'caveman', 'SKILL.md');
+    const skillFile = path.join(ws, 'skills', 'genz', 'SKILL.md');
     assert.ok(fs.existsSync(skillFile), 'skill SKILL.md missing');
     const skillRaw = fs.readFileSync(skillFile, 'utf8');
     assert.match(skillRaw, /^---\n/, 'skill missing frontmatter');
@@ -273,9 +273,9 @@ test('openclaw install writes skill folder + SOUL.md bootstrap', () => {
     const soul = path.join(ws, 'SOUL.md');
     assert.ok(fs.existsSync(soul), 'SOUL.md missing');
     const soulRaw = fs.readFileSync(soul, 'utf8');
-    assert.match(soulRaw, /<!-- caveman-begin -->/, 'SOUL.md missing begin marker');
-    assert.match(soulRaw, /<!-- caveman-end -->/, 'SOUL.md missing end marker');
-    assert.match(soulRaw, /Respond terse like smart caveman/, 'SOUL.md missing sentinel');
+    assert.match(soulRaw, /<!-- genz-begin -->/, 'SOUL.md missing begin marker');
+    assert.match(soulRaw, /<!-- genz-end -->/, 'SOUL.md missing end marker');
+    assert.match(soulRaw, /Respond terse like smart genz/, 'SOUL.md missing sentinel');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -288,10 +288,10 @@ test('openclaw install is idempotent: skill frontmatter not double-prepended, SO
   try {
     const env = { ...process.env, OPENCLAW_WORKSPACE: ws, NO_COLOR: '1' };
     const args = ['--only', 'openclaw', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir];
-    spawnSync('node', [INSTALLER, ...args], { env, encoding: 'utf8' });
-    spawnSync('node', [INSTALLER, ...args], { env, encoding: 'utf8' });
+    spawnSync(process.execPath, [INSTALLER, ...args], { env, encoding: 'utf8' });
+    spawnSync(process.execPath, [INSTALLER, ...args], { env, encoding: 'utf8' });
 
-    const skillRaw = fs.readFileSync(path.join(ws, 'skills', 'caveman', 'SKILL.md'), 'utf8');
+    const skillRaw = fs.readFileSync(path.join(ws, 'skills', 'genz', 'SKILL.md'), 'utf8');
     // version key should appear exactly once (idempotent merge).
     const versionMatches = skillRaw.match(/^version:/gm) || [];
     assert.equal(versionMatches.length, 1, `expected 1 version key after re-run, got ${versionMatches.length}`);
@@ -299,7 +299,7 @@ test('openclaw install is idempotent: skill frontmatter not double-prepended, SO
     assert.equal(alwaysMatches.length, 1, `expected 1 always key after re-run, got ${alwaysMatches.length}`);
 
     const soulRaw = fs.readFileSync(path.join(ws, 'SOUL.md'), 'utf8');
-    const beginMatches = soulRaw.match(/<!-- caveman-begin -->/g) || [];
+    const beginMatches = soulRaw.match(/<!-- genz-begin -->/g) || [];
     assert.equal(beginMatches.length, 1, `expected 1 marker block after re-run, got ${beginMatches.length}`);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
@@ -313,14 +313,14 @@ test('openclaw install preserves user content in SOUL.md (append, not overwrite)
   const userContent = '# my workspace\n\nfoo bar baz\n';
   fs.writeFileSync(path.join(ws, 'SOUL.md'), userContent);
   try {
-    spawnSync('node', [INSTALLER, '--only', 'openclaw', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir], {
+    spawnSync(process.execPath, [INSTALLER, '--only', 'openclaw', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir], {
       env: { ...process.env, OPENCLAW_WORKSPACE: ws, NO_COLOR: '1' },
       encoding: 'utf8',
     });
     const soulRaw = fs.readFileSync(path.join(ws, 'SOUL.md'), 'utf8');
     assert.match(soulRaw, /# my workspace/, 'user heading wiped during install');
     assert.match(soulRaw, /foo bar baz/, 'user content wiped during install');
-    assert.match(soulRaw, /<!-- caveman-begin -->/, 'caveman block not appended');
+    assert.match(soulRaw, /<!-- genz-begin -->/, 'genz block not appended');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -334,20 +334,20 @@ test('openclaw uninstall removes skill folder + strips SOUL.md block, preserving
   fs.writeFileSync(path.join(ws, 'SOUL.md'), userContent);
   try {
     const env = { ...process.env, OPENCLAW_WORKSPACE: ws, NO_COLOR: '1' };
-    spawnSync('node', [INSTALLER, '--only', 'openclaw', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir], { env, encoding: 'utf8' });
+    spawnSync(process.execPath, [INSTALLER, '--only', 'openclaw', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir], { env, encoding: 'utf8' });
 
     // Strip claude/gemini from PATH so uninstall doesn't touch real plugins.
     const cleanPath = pathWithout(['claude', 'gemini']);
-    const r = spawnSync('node', [INSTALLER, '--uninstall', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir], {
+    const r = spawnSync(process.execPath, [INSTALLER, '--uninstall', '--non-interactive', '--no-mcp-shrink', '--config-dir', dir], {
       env: { ...env, PATH: cleanPath },
       encoding: 'utf8',
     });
     assert.notEqual(r.status, 2, `uninstall argv error: ${r.stderr}`);
 
-    assert.equal(fs.existsSync(path.join(ws, 'skills', 'caveman')), false, 'skill folder should be removed');
+    assert.equal(fs.existsSync(path.join(ws, 'skills', 'genz')), false, 'skill folder should be removed');
     const soulAfter = fs.readFileSync(path.join(ws, 'SOUL.md'), 'utf8');
-    assert.doesNotMatch(soulAfter, /<!-- caveman-begin -->/, 'caveman block survived uninstall');
-    assert.doesNotMatch(soulAfter, /<!-- caveman-end -->/, 'caveman end marker survived uninstall');
+    assert.doesNotMatch(soulAfter, /<!-- genz-begin -->/, 'genz block survived uninstall');
+    assert.doesNotMatch(soulAfter, /<!-- genz-end -->/, 'genz end marker survived uninstall');
     assert.match(soulAfter, /# my workspace/, 'user heading wiped during uninstall');
     assert.match(soulAfter, /foo bar baz/, 'user content wiped during uninstall');
   } finally {
@@ -355,21 +355,21 @@ test('openclaw uninstall removes skill folder + strips SOUL.md block, preserving
   }
 });
 
-test('caveman-init.js --only openclaw routes through the same helper', () => {
+test('genz-init.js --only openclaw routes through the same helper', () => {
   const dir = freshTmpDir();
   const ws = path.join(dir, 'ws');
   fs.mkdirSync(ws);
   try {
-    const initScript = path.join(REPO_ROOT, 'src', 'tools', 'caveman-init.js');
-    const r = spawnSync('node', [initScript, dir, '--only', 'openclaw'], {
+    const initScript = path.join(REPO_ROOT, 'src', 'tools', 'genz-init.js');
+    const r = spawnSync(process.execPath, [initScript, dir, '--only', 'openclaw'], {
       env: { ...process.env, OPENCLAW_WORKSPACE: ws, NO_COLOR: '1' },
       encoding: 'utf8',
     });
-    assert.equal(r.status, 0, `caveman-init failed: ${r.stderr || r.stdout}`);
-    assert.ok(fs.existsSync(path.join(ws, 'skills', 'caveman', 'SKILL.md')), 'skill missing via init route');
+    assert.equal(r.status, 0, `genz-init failed: ${r.stderr || r.stdout}`);
+    assert.ok(fs.existsSync(path.join(ws, 'skills', 'genz', 'SKILL.md')), 'skill missing via init route');
     assert.ok(fs.existsSync(path.join(ws, 'SOUL.md')), 'SOUL.md missing via init route');
     const soulRaw = fs.readFileSync(path.join(ws, 'SOUL.md'), 'utf8');
-    assert.match(soulRaw, /Respond terse like smart caveman/, 'sentinel missing via init route');
+    assert.match(soulRaw, /Respond terse like smart genz/, 'sentinel missing via init route');
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -384,12 +384,12 @@ test('lib settings.addCommandHook is idempotent across two synthetic install pas
   try {
     const settings = SETTINGS.readSettings(settingsPath);
     SETTINGS.addCommandHook(settings, 'SessionStart', {
-      command: '"/usr/bin/node" "/abs/hooks/caveman-activate.js"',
-      marker: 'caveman-activate',
+      command: '"/usr/bin/node" "/abs/hooks/genz-activate.js"',
+      marker: 'genz-activate',
     });
     SETTINGS.addCommandHook(settings, 'SessionStart', {
-      command: '"/usr/bin/node" "/different/hooks/caveman-activate.js"',
-      marker: 'caveman-activate',
+      command: '"/usr/bin/node" "/different/hooks/genz-activate.js"',
+      marker: 'genz-activate',
     });
     SETTINGS.validateHookFields(settings);
     SETTINGS.writeSettings(settingsPath, settings);

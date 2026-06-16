@@ -17,7 +17,7 @@ function freshTmpDir() {
 
 test('dry-run --only claude prints plan and writes nothing', () => {
   const cfg = freshTmpDir();
-  const r = spawnSync('node', [INSTALLER,
+  const r = spawnSync(process.execPath, [INSTALLER,
     // --with-hooks: since #392/#393 the default only wires standalone hooks
     // when the plugin install fails. Force the hook-planning path so the
     // "would install / would merge" assertions below are exercised.
@@ -29,9 +29,9 @@ test('dry-run --only claude prints plan and writes nothing', () => {
   // is a no-op (the installer just prints "nothing detected" and exits 0).
   if (/Claude Code detected/.test(r.stdout)) {
     assert.match(r.stdout, /would run: claude plugin marketplace add/);
-    assert.match(r.stdout, /would run: claude plugin install caveman@caveman/);
+    assert.match(r.stdout, /would run: claude plugin install genz@genz/);
     assert.match(r.stdout, /would mkdir -p .*\/hooks/);
-    assert.match(r.stdout, /would install .*caveman-activate\.js/);
+    assert.match(r.stdout, /would install .*genz-activate\.js/);
     assert.match(r.stdout, /would merge SessionStart \+ UserPromptSubmit \+ statusline/);
   }
   // Nothing should have been written.
@@ -43,13 +43,13 @@ test('dry-run --uninstall does not delete files', () => {
   const cfg = freshTmpDir();
   // Seed a fake installation
   fs.mkdirSync(path.join(cfg, 'hooks'), { recursive: true });
-  const fake = path.join(cfg, 'hooks', 'caveman-activate.js');
+  const fake = path.join(cfg, 'hooks', 'genz-activate.js');
   fs.writeFileSync(fake, '// fake');
   fs.writeFileSync(path.join(cfg, 'settings.json'),
     JSON.stringify({ hooks: { SessionStart: [{ hooks: [{ type: 'command', command: 'node ' + fake }] }] } }, null, 2));
   const before = fs.readFileSync(path.join(cfg, 'settings.json'), 'utf8');
 
-  const r = spawnSync('node', [INSTALLER, '--uninstall', '--dry-run', '--non-interactive', '--config-dir', cfg],
+  const r = spawnSync(process.execPath, [INSTALLER, '--uninstall', '--dry-run', '--non-interactive', '--config-dir', cfg],
     { encoding: 'utf8', env: { ...process.env, CLAUDE_CONFIG_DIR: cfg } });
   assert.equal(r.status, 0);
 

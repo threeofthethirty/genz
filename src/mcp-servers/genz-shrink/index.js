@@ -1,43 +1,43 @@
 #!/usr/bin/env node
-// caveman-shrink — MCP middleware that proxies an upstream MCP server and
+// genz-shrink — MCP middleware that proxies an upstream MCP server and
 // compresses prose fields so the model sees fewer tokens.
 //
 // Usage:
-//   caveman-shrink <upstream-command> [...args]
+//   genz-shrink <upstream-command> [...args]
 //
 // Example wrapping the filesystem MCP server:
 //   "mcpServers": {
 //     "fs-shrunk": {
 //       "command": "npx",
-//       "args": ["caveman-shrink", "npx", "@modelcontextprotocol/server-filesystem", "/some/path"]
+//       "args": ["genz-shrink", "npx", "@modelcontextprotocol/server-filesystem", "/some/path"]
 //     }
 //   }
 //
 // Compression is applied to:
 //   - "description" fields in tools/list, prompts/list, resources/list responses
-//   - same boundaries as caveman-compress: code, URLs, paths, identifiers preserved
+//   - same boundaries as genz-compress: code, URLs, paths, identifiers preserved
 //
 // What we deliberately DON'T touch in v1:
 //   - tools/call response content (high risk of breaking downstream parsing)
 //   - request payloads going TO the upstream server
 //
 // Configuration (env vars):
-//   CAVEMAN_SHRINK_FIELDS   comma-separated extra field names to compress
+//   GENZ_SHRINK_FIELDS   comma-separated extra field names to compress
 //                           (default: description)
-//   CAVEMAN_SHRINK_DEBUG=1  log compression deltas to stderr
+//   GENZ_SHRINK_DEBUG=1  log compression deltas to stderr
 
 const { spawn } = require('child_process');
 const { compressDescriptionsInPlace, compress } = require('./compress');
 
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  process.stderr.write('caveman-shrink: missing upstream command.\n');
-  process.stderr.write('Usage: caveman-shrink <upstream-command> [...args]\n');
+  process.stderr.write('genz-shrink: missing upstream command.\n');
+  process.stderr.write('Usage: genz-shrink <upstream-command> [...args]\n');
   process.exit(2);
 }
 
-const debug = process.env.CAVEMAN_SHRINK_DEBUG === '1';
-const fields = (process.env.CAVEMAN_SHRINK_FIELDS || 'description')
+const debug = process.env.GENZ_SHRINK_DEBUG === '1';
+const fields = (process.env.GENZ_SHRINK_FIELDS || 'description')
   .split(',').map(s => s.trim()).filter(Boolean);
 
 const { getSpawnOptions } = require('./spawn-options');
@@ -45,7 +45,7 @@ const { getSpawnOptions } = require('./spawn-options');
 const upstream = spawn(args[0], args.slice(1), getSpawnOptions());
 
 upstream.on('error', err => {
-  process.stderr.write(`caveman-shrink: failed to spawn upstream: ${err.message}\n`);
+  process.stderr.write(`genz-shrink: failed to spawn upstream: ${err.message}\n`);
   process.exit(1);
 });
 
@@ -90,7 +90,7 @@ function transformResponse(msg) {
               compressedSomething = true;
               if (debug) {
                 process.stderr.write(
-                  `[caveman-shrink] ${arrayName}.${item.name || '?'}.${field}: ` +
+                  `[genz-shrink] ${arrayName}.${item.name || '?'}.${field}: ` +
                   `${before.length}→${out.length} bytes\n`
                 );
               }
