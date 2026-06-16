@@ -1,0 +1,2 @@
+description = "Show Gen Z modes and commands"
+prompt = "Show the genz-help quick reference. One-shot only: do not change active mode, write flags, or persist anything."

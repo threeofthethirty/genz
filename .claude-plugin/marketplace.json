@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "genz",
+  "description": "Gen Z communication mode for Claude Code, backed by a local slang reference index.",
+  "owner": {
+    "name": "BrightLiteMedia",
+    "url": "https://github.com/BrightLiteMedia"
+  },
+  "plugins": [
+    {
+      "name": "genz",
+      "description": "Talk in a natural Gen Z voice with accurate slang.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

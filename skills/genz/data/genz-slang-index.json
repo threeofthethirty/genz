@@ -1,0 +1,722 @@
+{
+  "version": 1,
+  "source": {
+    "url": "https://www.generationzslang.com/the-complete-gen-z-slang-dictionary/",
+    "fetchedAt": "2026-06-16T20:02:05.454Z",
+    "licenseNote": "Reference index generated from the public source page for local skill use."
+  },
+  "usage": {
+    "guidance": "Use entries as meaning guardrails. Full mode should be noticeably slangy when style is requested; lite stays restrained.",
+    "maxSlangPerNormalReply": 7
+  },
+  "entries": [
+    {
+      "term": "Ayo",
+      "key": "ayo",
+      "section": "A",
+      "sourceDefinition": "Casual attention-getter or opener, similar to \"hey\" or \"yo.\" Often used to start a lively reaction."
+    },
+    {
+      "term": "ASL",
+      "key": "asl",
+      "section": "A",
+      "sourceDefinition": "Used for emphasis, meaning \"extremely\" or \"very.\" \"That test was hard ASL.\""
+    },
+    {
+      "term": "Ate that",
+      "key": "ate-that",
+      "section": "A",
+      "sourceDefinition": "Did something perfectly or impressively. \"She absolutely ate that presentation.\""
+    },
+    {
+      "term": "Aesthetic",
+      "key": "aesthetic",
+      "section": "A",
+      "sourceDefinition": "Visually pleasing in a specific style or vibe. Can be used as a noun or adjective."
+    },
+    {
+      "term": "Babygirl",
+      "key": "babygirl",
+      "section": "B",
+      "sourceDefinition": "Used affectionately for someone endearing, regardless of gender. \"Pedro Pascal is babygirl.\""
+    },
+    {
+      "term": "Bae goals",
+      "key": "bae-goals",
+      "section": "B",
+      "sourceDefinition": "Often used ironically to describe couples that seem unrealistically perfect."
+    },
+    {
+      "term": "Based",
+      "key": "based",
+      "section": "B",
+      "sourceDefinition": "Unapologetically confident or expressing a bold opinion, often used ironically. \"That's such a based take.\""
+    },
+    {
+      "term": "Be so real",
+      "key": "be-so-real",
+      "section": "B",
+      "sourceDefinition": "Used to call out exaggeration or denial; means \"let's be honest.\" \"Be so real, you know you liked that movie.\""
+    },
+    {
+      "term": "Beige flag",
+      "key": "beige-flag",
+      "section": "B",
+      "sourceDefinition": "A trait that's not good or bad, just boring or unremarkable. Less serious than a red flag."
+    },
+    {
+      "term": "Bestie",
+      "key": "bestie",
+      "section": "B",
+      "sourceDefinition": "Close friend, but often used ironically or sarcastically toward strangers online."
+    },
+    {
+      "term": "Bet",
+      "key": "bet",
+      "section": "B",
+      "sourceDefinition": "Means \"okay,\" \"yes,\" or \"for sure.\" Shows agreement or confirmation."
+    },
+    {
+      "term": "Black cat energy",
+      "key": "black-cat-energy",
+      "section": "B",
+      "sourceDefinition": "Someone who's mysterious, independent, and a bit aloof. Opposite of golden retriever energy."
+    },
+    {
+      "term": "Bodied",
+      "key": "bodied",
+      "section": "B",
+      "sourceDefinition": "Completely dominated or defeated someone, usually in an argument or competition."
+    },
+    {
+      "term": "Boy math",
+      "key": "boy-math",
+      "section": "B",
+      "sourceDefinition": "Joking about illogical male reasoning patterns. \"Boy math is buying a $500 TV to save money on movie tickets.\""
+    },
+    {
+      "term": "Brainrot",
+      "key": "brainrot",
+      "section": "B",
+      "sourceDefinition": "Consuming so much repetitive media (especially TikTok) that your attention span feels damaged."
+    },
+    {
+      "term": "Bussin",
+      "key": "bussin",
+      "section": "B",
+      "sourceDefinition": "Really good, especially when describing food. \"This pizza is bussin!\""
+    },
+    {
+      "term": "Camp / It's camp",
+      "key": "camp-it-s-camp",
+      "section": "C",
+      "sourceDefinition": "Over-the-top, theatrical, or deliberately exaggerated; \"so bad it's good\" or intentionally absurd."
+    },
+    {
+      "term": "Canon event",
+      "key": "canon-event",
+      "section": "C",
+      "sourceDefinition": "A life experience that shapes someone's character development, often unavoidable. \"Getting your heart broken in high school is a canon event.\""
+    },
+    {
+      "term": "Capybara energy",
+      "key": "capybara-energy",
+      "section": "C",
+      "sourceDefinition": "Calm, unbothered, and peaceful vibe, based on the relaxed nature of capybaras."
+    },
+    {
+      "term": "Caught in 4K",
+      "key": "caught-in-4k",
+      "section": "C",
+      "sourceDefinition": "Being caught doing something embarrassing or questionable with clear evidence."
+    },
+    {
+      "term": "CEO of [something]",
+      "key": "ceo-of-something",
+      "section": "C",
+      "sourceDefinition": "Being the best at something or doing it constantly. \"She's the CEO of overthinking.\""
+    },
+    {
+      "term": "Chef's kiss",
+      "key": "chef-s-kiss",
+      "section": "C",
+      "sourceDefinition": "Something that's absolutely perfect, often used with the \"OK\" hand gesture."
+    },
+    {
+      "term": "Cheugy",
+      "key": "cheugy",
+      "section": "C",
+      "sourceDefinition": "Outdated, trying too hard to be trendy, or no longer cool. Pronounced \"chew-gee.\""
+    },
+    {
+      "term": "Chile",
+      "key": "chile",
+      "section": "C",
+      "sourceDefinition": "\"Child\" but used as an expression of disbelief or exasperation. Often spelled this way online."
+    },
+    {
+      "term": "Cleared",
+      "key": "cleared",
+      "section": "C",
+      "sourceDefinition": "Did something so well that you surpassed everyone else completely."
+    },
+    {
+      "term": "Clean girl aesthetic",
+      "key": "clean-girl-aesthetic",
+      "section": "C",
+      "sourceDefinition": "A minimalist beauty and style approach focusing on natural looks and effortless vibes."
+    },
+    {
+      "term": "Cook / You're cooking",
+      "key": "cook-you-re-cooking",
+      "section": "C",
+      "sourceDefinition": "Doing something really well, especially creatively. \"You're cooking with this outfit.\""
+    },
+    {
+      "term": "Cooked",
+      "key": "cooked",
+      "section": "C",
+      "sourceDefinition": "Done, ruined, or mentally exhausted. \"My brain is cooked after that exam.\" Often paired with brainrot."
+    },
+    {
+      "term": "Corecore",
+      "key": "corecore",
+      "section": "C",
+      "sourceDefinition": "A TikTok aesthetic trend mixing deep emotion, nostalgia, and existential themes."
+    },
+    {
+      "term": "Cringe",
+      "key": "cringe",
+      "section": "C",
+      "sourceDefinition": "Extremely embarrassing or uncomfortable to watch. Makes you physically recoil."
+    },
+    {
+      "term": "Delulu",
+      "key": "delulu",
+      "section": "D",
+      "sourceDefinition": "Short for \"delusional,\" used playfully to describe over-optimism, especially about relationships. \"I'm so delulu thinking he likes me back.\""
+    },
+    {
+      "term": "Devoured",
+      "key": "devoured",
+      "section": "D",
+      "sourceDefinition": "Absolutely dominated or did something exceptionally well. Similar to \"ate that.\""
+    },
+    {
+      "term": "Down bad",
+      "key": "down-bad",
+      "section": "D",
+      "sourceDefinition": "Desperately attracted to someone or in a pathetic romantic situation. \"He's down bad for her.\""
+    },
+    {
+      "term": "Drip",
+      "key": "drip",
+      "section": "D",
+      "sourceDefinition": "Excellent fashion sense or style. \"Your outfit has serious drip.\""
+    },
+    {
+      "term": "Facts",
+      "key": "facts",
+      "section": "F",
+      "sourceDefinition": "Concise, emphatic agreement meaning \"that's absolutely true.\" \"This project needs more resources.\" \"Facts.\" Shows strong validation and support for what someone said."
+    },
+    {
+      "term": "Fan behavior",
+      "key": "fan-behavior",
+      "section": "F",
+      "sourceDefinition": "Doing too much admiration or obsessing over someone; used sarcastically. \"You liking all his posts? That's fan behavior.\""
+    },
+    {
+      "term": "Fire",
+      "key": "fire",
+      "section": "F",
+      "sourceDefinition": "Excellent, amazing, or really good. Can describe music, food, outfits, anything positive."
+    },
+    {
+      "term": "Fit check",
+      "key": "fit-check",
+      "section": "F",
+      "sourceDefinition": "Showing off your outfit, usually on social media. Short for \"outfit check.\""
+    },
+    {
+      "term": "FR",
+      "key": "fr",
+      "section": "F",
+      "sourceDefinition": "Used for emphasis or agreement. \"That movie was good FR.\""
+    },
+    {
+      "term": "FYP",
+      "key": "fyp",
+      "section": "F",
+      "sourceDefinition": "The main feed on TikTok where the algorithm shows you personalized content."
+    },
+    {
+      "term": "Gagged",
+      "key": "gagged",
+      "section": "G",
+      "sourceDefinition": "Shocked, impressed, or left speechless by something unexpected. \"That plot twist had me gagged.\""
+    },
+    {
+      "term": "Gatekeep",
+      "key": "gatekeep",
+      "section": "G",
+      "sourceDefinition": "Withholding information to keep something exclusive or niche. \"Don't gatekeep that skincare routine.\""
+    },
+    {
+      "term": "Girl math",
+      "key": "girl-math",
+      "section": "G",
+      "sourceDefinition": "Joking about female logic patterns, especially around spending. \"Girl math says this dress was free because I used store credit.\""
+    },
+    {
+      "term": "Glow up",
+      "key": "glow-up",
+      "section": "G",
+      "sourceDefinition": "A positive transformation, usually in appearance or confidence, often over time."
+    },
+    {
+      "term": "Go off",
+      "key": "go-off",
+      "section": "G",
+      "sourceDefinition": "Either to get angry/upset OR to do something really well (context-dependent)."
+    },
+    {
+      "term": "Golden retriever energy",
+      "key": "golden-retriever-energy",
+      "section": "G",
+      "sourceDefinition": "Someone who's enthusiastic, loyal, and friendly. Opposite of black cat energy."
+    },
+    {
+      "term": "GRWM",
+      "key": "grwm",
+      "section": "G",
+      "sourceDefinition": "A type of video showing someone's routine getting dressed, doing makeup, etc."
+    },
+    {
+      "term": "Gaslight / Gatekeep / Girlboss",
+      "key": "gaslight-gatekeep-girlboss",
+      "section": "G",
+      "sourceDefinition": "Iconic trio phrase: Gatekeep : withholding information to keep something exclusive"
+    },
+    {
+      "term": "GYAT / GYATT",
+      "key": "gyat-gyatt",
+      "section": "G",
+      "sourceDefinition": "Exclamation about someone attractive, often considered inappropriate. Multiple T's add emphasis."
+    },
+    {
+      "term": "Highkey",
+      "key": "highkey",
+      "section": "H",
+      "sourceDefinition": "Openly, obviously, or to a high degree. Opposite of lowkey. \"I highkey hate that song.\""
+    },
+    {
+      "term": "Healing era",
+      "key": "healing-era",
+      "section": "H",
+      "sourceDefinition": "A period focused on self-improvement and recovering from past experiences."
+    },
+    {
+      "term": "Hits different",
+      "key": "hits-different",
+      "section": "H",
+      "sourceDefinition": "Something that's exceptionally good or affects you in a special way."
+    },
+    {
+      "term": "Ick / The ick",
+      "key": "ick-the-ick",
+      "section": "I",
+      "sourceDefinition": "A sudden feeling of disgust or turn-off, especially in dating contexts."
+    },
+    {
+      "term": "IJBOL",
+      "key": "ijbol",
+      "section": "I",
+      "sourceDefinition": "A newer alternative to \"LOL\" that Gen Z actually uses."
+    },
+    {
+      "term": "I'm deceased",
+      "key": "i-m-deceased",
+      "section": "I",
+      "sourceDefinition": "Something was so funny or shocking that you metaphorically \"died\" from it."
+    },
+    {
+      "term": "I'm screaming",
+      "key": "i-m-screaming",
+      "section": "I",
+      "sourceDefinition": "Something is so funny, shocking, or unbelievable that you're metaphorically screaming."
+    },
+    {
+      "term": "ISTG",
+      "key": "istg",
+      "section": "I",
+      "sourceDefinition": "Used for emphasis when making a serious point or promise."
+    },
+    {
+      "term": "It's giving",
+      "key": "it-s-giving",
+      "section": "I",
+      "sourceDefinition": "It gives off a certain vibe or energy. \"This outfit is giving main character energy.\""
+    },
+    {
+      "term": "It's giving delusion",
+      "key": "it-s-giving-delusion",
+      "section": "I",
+      "sourceDefinition": "Hybrid phrase for playful criticism of unrealistic confidence."
+    },
+    {
+      "term": "IYKYK",
+      "key": "iykyk",
+      "section": "I",
+      "sourceDefinition": "Referring to something only certain people will understand."
+    },
+    {
+      "term": "L",
+      "key": "l",
+      "section": "L",
+      "sourceDefinition": "A loss or failure. \"Taking an L on that test.\""
+    },
+    {
+      "term": "Living rent free",
+      "key": "living-rent-free",
+      "section": "L",
+      "sourceDefinition": "When something (usually annoying) stays in your mind constantly without you wanting it to."
+    },
+    {
+      "term": "Lowkey",
+      "key": "lowkey",
+      "section": "L",
+      "sourceDefinition": "Somewhat, secretly, or to a small degree. \"I lowkey love this song.\""
+    },
+    {
+      "term": "L + ratio",
+      "key": "l-ratio",
+      "section": "L",
+      "sourceDefinition": "A harsh comeback combining \"you took a loss\" with getting ratioed (more negative responses)."
+    },
+    {
+      "term": "Main character energy",
+      "key": "main-character-energy",
+      "section": "M",
+      "sourceDefinition": "Acting like you're the protagonist of your own life; confident and self-focused."
+    },
+    {
+      "term": "Main character syndrome",
+      "key": "main-character-syndrome",
+      "section": "M",
+      "sourceDefinition": "When someone overdramatizes their life as if they're in a movie."
+    },
+    {
+      "term": "Main quest / Side quest",
+      "key": "main-quest-side-quest",
+      "section": "M",
+      "sourceDefinition": "Life-as-video-game metaphor for priorities. \"I'm on a side quest getting snacks instead of studying.\""
+    },
+    {
+      "term": "Mid",
+      "key": "mid",
+      "section": "M",
+      "sourceDefinition": "Mediocre, average, or disappointing. Not terrible, but not good either."
+    },
+    {
+      "term": "Mother / She's mother",
+      "key": "mother-she-s-mother",
+      "section": "M",
+      "sourceDefinition": "Complimenting someone as iconic, powerful, or legendary. \"Beyoncé is mother.\""
+    },
+    {
+      "term": "NGL",
+      "key": "ngl",
+      "section": "N",
+      "sourceDefinition": "Used before stating an honest opinion or admission."
+    },
+    {
+      "term": "No cap",
+      "key": "no-cap",
+      "section": "N",
+      "sourceDefinition": "No lie, for real, being completely honest. \"That concert was amazing, no cap.\""
+    },
+    {
+      "term": "No rizz",
+      "key": "no-rizz",
+      "section": "N",
+      "sourceDefinition": "Having no charm or ability to flirt successfully."
+    },
+    {
+      "term": "On god",
+      "key": "on-god",
+      "section": "O",
+      "sourceDefinition": "Used for strong agreement or sincerity, similar to \"for real\" or \"I swear.\""
+    },
+    {
+      "term": "Not it",
+      "key": "not-it",
+      "section": "N",
+      "sourceDefinition": "Something doesn't work, misses the mark, or isn't the right choice. \"Those shoes with that dress? Not it.\""
+    },
+    {
+      "term": "Not me",
+      "key": "not-me",
+      "section": "N",
+      "sourceDefinition": "Used ironically before describing something you definitely did. \"Not me crying over this movie.\""
+    },
+    {
+      "term": "Not you",
+      "key": "not-you",
+      "section": "N",
+      "sourceDefinition": "Used to call someone out, usually playfully. \"Not you wearing socks with sandals.\""
+    },
+    {
+      "term": "NPC energy",
+      "key": "npc-energy",
+      "section": "N",
+      "sourceDefinition": "Acting basic, predictable, or oblivious, like a non-player character in a video game. Can also refer to \"NPC moments.\""
+    },
+    {
+      "term": "Ohio / Only in Ohio",
+      "key": "ohio-only-in-ohio",
+      "section": "O",
+      "sourceDefinition": "Used to describe something weird, chaotic, or bizarre. Ohio represents strangeness."
+    },
+    {
+      "term": "Oop",
+      "key": "oop",
+      "section": "O",
+      "sourceDefinition": "Expression of surprise, awkwardness, or \"oops\" when something unexpected happens."
+    },
+    {
+      "term": "OOMF",
+      "key": "oomf",
+      "section": "O",
+      "sourceDefinition": "Referring to a follower without naming them directly."
+    },
+    {
+      "term": "Outfit ate",
+      "key": "outfit-ate",
+      "section": "O",
+      "sourceDefinition": "An outfit that looks absolutely perfect. \"Your outfit ate and left no crumbs.\""
+    },
+    {
+      "term": "Periodt",
+      "key": "periodt",
+      "section": "P",
+      "sourceDefinition": "Period, but with emphasis. Used to end a statement definitively. \"She's the best singer, periodt.\""
+    },
+    {
+      "term": "Pick me",
+      "key": "pick-me",
+      "section": "P",
+      "sourceDefinition": "Someone who tries too hard to seem different or special, often putting down others."
+    },
+    {
+      "term": "Pop off",
+      "key": "pop-off",
+      "section": "P",
+      "sourceDefinition": "To do something impressive or to get excited/angry about something."
+    },
+    {
+      "term": "Preppy",
+      "key": "preppy",
+      "section": "P",
+      "sourceDefinition": "Clean, polished aesthetic often associated with wealth and traditional style."
+    },
+    {
+      "term": "Purr",
+      "key": "purr",
+      "section": "P",
+      "sourceDefinition": "Expression of approval or satisfaction, like a cat purring when content."
+    },
+    {
+      "term": "Ratio",
+      "key": "ratio",
+      "section": "R",
+      "sourceDefinition": "When a reply gets more likes than the original post, indicating disagreement or better content."
+    },
+    {
+      "term": "Real / Real one",
+      "key": "real-real-one",
+      "section": "R",
+      "sourceDefinition": "Someone genuine and loyal; shorthand validation. \"You're a real one for helping me move.\""
+    },
+    {
+      "term": "Rizz",
+      "key": "rizz",
+      "section": "R",
+      "sourceDefinition": "Charisma, especially the ability to attract romantic interest. Short for \"charisma.\" Dominated 2024 TikTok slang; still relevant in 2025 but sometimes used ironically."
+    },
+    {
+      "term": "RN",
+      "key": "rn",
+      "section": "R",
+      "sourceDefinition": "Abbreviation for \"right now.\" Used casually to make timing feel immediate."
+    },
+    {
+      "term": "Rizz god",
+      "key": "rizz-god",
+      "section": "R",
+      "sourceDefinition": "Someone with exceptional charm and flirting abilities."
+    },
+    {
+      "term": "Rizzing up",
+      "key": "rizzing-up",
+      "section": "R",
+      "sourceDefinition": "The act of flirting or trying to charm someone."
+    },
+    {
+      "term": "Say less",
+      "key": "say-less",
+      "section": "S",
+      "sourceDefinition": "You've convinced me, I'm already on board, you don't need to explain further."
+    },
+    {
+      "term": "Selulu",
+      "key": "selulu",
+      "section": "S",
+      "sourceDefinition": "From delulu + self-love; embracing confidence or manifesting energy. \"I'm not delulu, I'm selulu.\""
+    },
+    {
+      "term": "Sending me",
+      "key": "sending-me",
+      "section": "S",
+      "sourceDefinition": "Something is so funny it's metaphorically \"sending\" you (usually to another dimension)."
+    },
+    {
+      "term": "Served",
+      "key": "served",
+      "section": "S",
+      "sourceDefinition": "Did something exceptionally well, often in a competitive context."
+    },
+    {
+      "term": "Serving looks",
+      "key": "serving-looks",
+      "section": "S",
+      "sourceDefinition": "Looking absolutely amazing, usually referring to an outfit or appearance."
+    },
+    {
+      "term": "Sigma",
+      "key": "sigma",
+      "section": "S",
+      "sourceDefinition": "Supposedly a \"lone wolf\" personality type, often used ironically or in memes."
+    },
+    {
+      "term": "Situationship",
+      "key": "situationship",
+      "section": "S",
+      "sourceDefinition": "A romantic relationship without official labels or commitment."
+    },
+    {
+      "term": "Skibidi",
+      "key": "skibidi",
+      "section": "S",
+      "sourceDefinition": "Nonsense word from viral videos, often used ironically or became its own micro-language in memes."
+    },
+    {
+      "term": "Slaps",
+      "key": "slaps",
+      "section": "S",
+      "sourceDefinition": "Something is really good, especially music. \"This song absolutely slaps.\""
+    },
+    {
+      "term": "Slay era",
+      "key": "slay-era",
+      "section": "S",
+      "sourceDefinition": "A confident, thriving period of life; an evolution of villain era."
+    },
+    {
+      "term": "Snapped",
+      "key": "snapped",
+      "section": "S",
+      "sourceDefinition": "Did something impressively or creatively, showing skill or innovation. \"You really snapped with this outfit\"."
+    },
+    {
+      "term": "Soft launch",
+      "key": "soft-launch",
+      "section": "S",
+      "sourceDefinition": "Gradually revealing a relationship on social media with subtle hints rather than clear confirmation."
+    },
+    {
+      "term": "Sus",
+      "key": "sus",
+      "section": "S",
+      "sourceDefinition": "Short for \"suspicious.\" Can be playful teasing between friends (\"that's sus\") or genuine distrust (\"he's acting sus\")."
+    },
+    {
+      "term": "Talking stage",
+      "key": "talking-stage",
+      "section": "T",
+      "sourceDefinition": "The early phase of dating when you're getting to know someone but not official."
+    },
+    {
+      "term": "That girl",
+      "key": "that-girl",
+      "section": "T",
+      "sourceDefinition": "Someone who has their life together and embodies confidence and success."
+    },
+    {
+      "term": "The audacity",
+      "key": "the-audacity",
+      "section": "T",
+      "sourceDefinition": "When someone does something shocking or bold, usually in a negative way."
+    },
+    {
+      "term": "The way I&#8230;",
+      "key": "the-way-i-8230",
+      "section": "T",
+      "sourceDefinition": "Used to start a sentence expressing relatable behavior. \"The way I immediately checked my phone.\""
+    },
+    {
+      "term": "Touch grass",
+      "key": "touch-grass",
+      "section": "T",
+      "sourceDefinition": "Go outside and experience real life instead of being online constantly. Sometimes used ironically when the speaker knows they're too online themselves."
+    },
+    {
+      "term": "Understood the assignment",
+      "key": "understood-the-assignment",
+      "section": "U",
+      "sourceDefinition": "Did exactly what was expected and did it perfectly."
+    },
+    {
+      "term": "Unspoken rizz",
+      "key": "unspoken-rizz",
+      "section": "U",
+      "sourceDefinition": "Having natural charm without trying or saying much."
+    },
+    {
+      "term": "Valid",
+      "key": "valid",
+      "section": "V",
+      "sourceDefinition": "Reasonable, acceptable, or making sense. Shows approval of someone's feelings or choices."
+    },
+    {
+      "term": "Very demure, very mindful",
+      "key": "very-demure-very-mindful",
+      "section": "V",
+      "sourceDefinition": "Acting modest, thoughtful, and considerate (often used ironically)."
+    },
+    {
+      "term": "Vibe check",
+      "key": "vibe-check",
+      "section": "V",
+      "sourceDefinition": "Assessing someone's mood, energy, or attitude in a situation."
+    },
+    {
+      "term": "Villain era",
+      "key": "villain-era",
+      "section": "V",
+      "sourceDefinition": "A period when someone prioritizes themselves and stops people-pleasing."
+    },
+    {
+      "term": "W",
+      "key": "w",
+      "section": "W",
+      "sourceDefinition": "A win or something positive. \"Getting off work early is such a W.\""
+    },
+    {
+      "term": "W rizz",
+      "key": "w-rizz",
+      "section": "W",
+      "sourceDefinition": "Good charisma or successful flirting ability."
+    }
+  ]
+}

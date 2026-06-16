@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "skills": {
+    "genz": {
+      "source": "BrightLiteMedia/genz",
+      "sourceType": "github",
+      "skillPath": "skills/genz/SKILL.md",
+      "computedHash": "7c3cbdad3f42a8f01374d19bae63701f25080ffbb2fa0c101329134d3c420696"
+    },
+    "genz-commit": {
+      "source": "BrightLiteMedia/genz",
+      "sourceType": "github",
+      "skillPath": "skills/genz-commit/SKILL.md",
+      "computedHash": "41fe3e2abb0563313d82ebc2080b78699d2ad313fdb4c8834b913821b33b2ed7"
+    },
+    "genz-review": {
+      "source": "BrightLiteMedia/genz",
+      "sourceType": "github",
+      "skillPath": "skills/genz-review/SKILL.md",
+      "computedHash": "7e2cf28c25b787b62ee82f5ef8d8bce11cef0f36c78eaf8e49f75fa29ea1ebe0"
+    },
+    "genz-compress": {
+      "source": "BrightLiteMedia/genz",
+      "sourceType": "github",
+      "skillPath": "skills/genz-compress/SKILL.md",
+      "computedHash": "8c1e578a1681479af2fa8124ade2fc5a89aac07d12f3e4da2e6feb343df8c126"
+    },
+    "genz-stats": {
+      "source": "BrightLiteMedia/genz",
+      "sourceType": "github",
+      "skillPath": "skills/genz-stats/SKILL.md",
+      "computedHash": "46495f47328f7bad73312346550b2f2f6ae8b067001ed4188a931558110d708f"
+    },
+    "genz-help": {
+      "source": "BrightLiteMedia/genz",
+      "sourceType": "github",
+      "skillPath": "skills/genz-help/SKILL.md",
+      "computedHash": "e05951104e174310adcc13419c8959347b9cf368b011fa8cb497e94918e1b4a6"
+    }
+  }
+}

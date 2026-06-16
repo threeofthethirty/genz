@@ -1,0 +1,36 @@
+{
+  "name": "genz-installer",
+  "version": "0.1.0",
+  "description": "Gen Z skill installer — detects your AI coding agents and installs genz for each one.",
+  "license": "MIT",
+  "author": "Jason Elguapo",
+  "homepage": "https://github.com/BrightLiteMedia/genz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrightLiteMedia/genz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BrightLiteMedia/genz/issues"
+  },
+  "bin": {
+    "genz": "./bin/install.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test tests/installer/*.test.mjs"
+  },
+  "files": [
+    "bin/",
+    "scripts/",
+    "src/",
+    "agents/",
+    "skills/",
+    "plugins/",
+    "commands/",
+    "dist/genz.skill",
+    "README.md",
+    "LICENSE"
+  ]
+}

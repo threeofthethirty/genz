@@ -1,0 +1,1 @@
+@./skills/genz/SKILL.md

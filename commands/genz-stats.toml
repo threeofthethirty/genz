@@ -1,0 +1,2 @@
+description = "Show real Gen Z token usage and savings"
+prompt = "Show /genz-stats output. If the hook is unavailable, run node src/hooks/genz-stats.js and report the formatted stats."

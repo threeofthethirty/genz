@@ -1,0 +1,2 @@
+description = "Compress markdown/text into token-minimal Gen Z prose"
+prompt = "Run the genz-compress skill on {{args}}. Preserve code blocks, inline code, URLs, file paths, commands, headings, frontmatter, and markdown structure exactly. Refuse source/config/secret files and *.original.md backups. Token savings first; Gen Z slang only if it does not add noise."
