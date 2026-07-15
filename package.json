@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "description": "Gen Z skill installer — detects your AI coding agents and installs genz for each one.",
   "license": "MIT",
-  "author": "Jason Elguapo",
-  "homepage": "https://github.com/BrightLiteMedia/genz",
+  "author": "threeofthethirty",
+  "homepage": "https://github.com/threeofthethirty/genz",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BrightLiteMedia/genz.git"
+    "url": "git+https://github.com/threeofthethirty/genz.git"
   },
   "bugs": {
-    "url": "https://github.com/BrightLiteMedia/genz/issues"
+    "url": "https://github.com/threeofthethirty/genz/issues"
   },
   "bin": {
     "genz": "./bin/install.js"
