@@ -14,7 +14,7 @@ node bin/install.js
 Remote install:
 
 ```bash
-npx -y github:jasonelguapo/genz -- --only claude
+npx -y github:threeofthethirty/genz -- --only claude
 ```
 
 Dry run:
@@ -55,7 +55,7 @@ node bin/install.js --only codex
 For agents installed through the Skills CLI, use:
 
 ```bash
-npx skills add jasonelguapo/genz -a codex
+npx skills add theeofthethirty/genz -a codex
 ```
 
 Replace `codex` with the target profile.
@@ -94,7 +94,7 @@ node src/tools/genz-init.js --dry-run
 node src/tools/genz-init.js --force
 ```
 
-The source rule is [src/rules/genz-activate.md](/Users/jasonelguapo/Documents/Projects/genz/src/rules/genz-activate.md).
+The source rule is [src/rules/genz-activate.md](/Users/theeofthethirty/Documents/Projects/genz/src/rules/genz-activate.md).
 
 ## Configuration
 
