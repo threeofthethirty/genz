@@ -17,7 +17,7 @@
 
 set -euo pipefail
 
-REPO="${GENZ_REPO:-BrightLiteMedia/genz}"
+REPO="${GENZ_REPO:-threeofthethirty/genz}"
 
 # Require Node ≥18. nvm is a common path; print a hint if missing.
 if ! command -v node >/dev/null 2>&1; then
